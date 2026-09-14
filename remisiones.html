@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo de Remisión de Expedientes - INRA Bolivia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <style>
+    .search-results-dropdown {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      background: #FFFFFF;
+      border: 1px solid #CBD5E1;
+      border-radius: var(--radius-md);
+      box-shadow: 0 16px 36px rgba(15, 23, 42, 0.12);
+      z-index: 9999;
+      max-height: 420px;
+      overflow-y: auto;
+      display: none;
+    }
+    .search-result-item {
+      padding: 14px 18px;
+      border-bottom: 1px solid #F1F5F9;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    .search-result-item:last-child {
+      border-bottom: none;
+    }
+    .search-result-item:hover {
+      background: #F0FDF4;
+    }
+    .search-result-item.active {
+      background: #DCFCE7;
+    }
+    .localizador-card {
+      background: #FFFFFF;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      overflow: visible !important;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 50;
+    }
+    .localizador-card .card-body-inner {
+      padding: 20px 24px;
+    }
+    .localizador-title {
+      font-weight: 700;
+      color: #0F172A;
+      margin-bottom: 12px;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .localizador-input-wrap {
+      position: relative;
+      width: 100%;
+    }
+    .lookup-input-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #64748B;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+    }
+    .lookup-clear-btn {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #F1F5F9;
+      border: 1px solid #E2E8F0;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      color: #64748B;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .lookup-clear-btn:hover {
+      background: #FEE2E2;
+      border-color: #FECACA;
+      color: #991B1B;
+    }
+    .exp-lookup-card {
+      background: #FFFFFF;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 24px;
+      display: none;
+      animation: fadeIn 0.25s ease-in-out;
+    }
+    .custodia-banner {
+      padding: 12px 18px;
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .custodia-banner-archivo {
+      background-color: #ECFDF5;
+      border: 1px solid #A7F3D0;
+      color: #065F46;
+    }
+    .custodia-banner-remitido {
+      background-color: #FFFBEB;
+      border: 1px solid #FDE68A;
+      color: #92400E;
+    }
+    .selected-predio-tag {
+      background: #ECFDF5;
+      border: 1px solid #A7F3D0;
+      color: #065F46;
+      padding: 8px 14px;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-wrapper">
+    <!-- SIDEBAR INSTITUCIONAL -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo-icon">INRA</div>
+        <div class="sidebar-brand">
+          <div class="sidebar-brand-title">INRA BOLIVIA</div>
+          <div class="sidebar-brand-sub">Tierras Fiscales</div>
+        </div>
+      </div>
+      <nav class="sidebar-menu">
+        <div class="sidebar-section-title">Principal</div>
+        <a href="dashboard.html" class="nav-link">
+          <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span>
+          <span>Panel de Control</span>
+        </a>
+        <a href="tierras-fiscales.html" class="nav-link">
+          <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
+          <span>Tierras Fiscales</span>
+        </a>
+        <a href="tf-detalle.html?nuevo=true" class="nav-link" data-role-required="editor">
+          <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></span>
+          <span>Nuevo Registro</span>
+        </a>
+        <div class="sidebar-section-title">Archivo & Custodia</div>
+        <a href="remisiones.html" class="nav-link active">
+          <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>
+          <span>Remisión de Expedientes</span>
+        </a>
+        <div class="sidebar-section-title" data-role-required="administrador">Sistema</div>
+        <a href="administracion.html" class="nav-link" data-role-required="administrador">
+          <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
+          <span>Administración</span>
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-snippet">
+          <div class="user-avatar" id="layout-user-avatar">U</div>
+          <div class="user-details">
+            <div class="user-name" id="layout-user-name">Usuario</div>
+            <div class="user-role-badge" id="layout-user-role">ACTIVO</div>
+          </div>
+        </div>
+        <button class="btn-logout" id="btn-logout" title="Cerrar Sesión">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+      </div>
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <div class="topbar-institution">
+            <span>CONTROL DE CUSTODIA Y REMISIÓN DOCUMENTAL</span>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <span class="current-datetime" id="current-datetime">...</span>
+        </div>
+      </header>
+
+      <main class="page-container">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1>Control de Remisión de Expedientes</h1>
+            <div class="page-subtitle">Trazabilidad documental: salidas a Direcciones Jurídica, Saneamiento y retorno al archivo</div>
+          </div>
+          <div class="d-flex gap-2">
+            <button id="btn-open-modal-salida" class="btn btn-warning" data-role-required="editor">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><path d="M9 18l6-6-6-6"/></svg>
+              Registrar Salida
+            </button>
+            <button id="btn-open-modal-retorno" class="btn btn-success" data-role-required="editor">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+              Registrar Retorno
+            </button>
+          </div>
+        </div>
+
+        <!-- BUSCADOR / LOCALIZADOR DE EXPEDIENTES -->
+        <div class="localizador-card">
+          <div class="card-body-inner">
+            <div class="localizador-title">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              Localizador Rápido de Expediente y Predios Asociados
+            </div>
+            <div class="localizador-input-wrap">
+              <span class="lookup-input-icon">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              </span>
+              <input type="text" id="lookup-exp-input" class="form-control" placeholder="Escriba el N° de Expediente, N° de Archivador, CODPRED o Nombre del Predio..." style="width:100%; height: 46px; padding-left: 44px; padding-right: 44px; font-size: 0.95rem; font-weight: 500;" autocomplete="off">
+              <button type="button" id="lookup-clear-btn" class="lookup-clear-btn" title="Limpiar búsqueda">✕</button>
+              <div id="lookup-results-dropdown" class="search-results-dropdown"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TARJETA INFORMATIVA DEL EXPEDIENTE SELECCIONADO -->
+        <div id="exp-lookup-card" class="exp-lookup-card">
+          <div class="d-flex justify-between align-center mb-3">
+            <div>
+              <h2 id="card-exp-title" style="margin-bottom: 4px; font-size: 1.25rem; font-weight: 700; color: #0F172A;">Expediente</h2>
+              <div id="card-exp-sub" class="text-muted" style="font-size: 0.85rem; font-weight: 500;">Tierra Fiscal Asociada</div>
+            </div>
+            <div class="d-flex align-center gap-2">
+              <div id="card-exp-ubicacion-badge"></div>
+              <button type="button" id="card-btn-close" class="btn btn-secondary btn-sm" title="Ocultar ficha">Cerrar</button>
+            </div>
+          </div>
+
+          <!-- BANNER DE CUSTODIA DINÁMICO -->
+          <div id="card-custodia-banner" class="custodia-banner custodia-banner-archivo">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <div id="card-custodia-text" style="flex:1;">
+              <strong>EXPEDIENTE EN ARCHIVO:</strong> Se encuentra físicamente en inventario de custodia del Archivo Central.
+            </div>
+          </div>
+
+          <div class="form-grid mb-3" style="background:#F8FAFC; padding: 20px; border-radius: var(--radius-md); border: 1px solid #E2E8F0;">
+            <div class="col-3">
+              <div class="form-label" style="font-size: 0.72rem; margin-bottom: 2px;">CODPRED</div>
+              <div id="card-val-codpred" class="tabular-nums" style="color:var(--color-primary); font-weight:700; font-size: 1.05rem;">-</div>
+            </div>
+            <div class="col-3">
+              <div class="form-label" style="font-size: 0.72rem; margin-bottom: 2px;">ESTADO GLOBAL</div>
+              <div id="card-val-estado-global" style="font-weight:600;">-</div>
+            </div>
+            <div class="col-3">
+              <div class="form-label" style="font-size: 0.72rem; margin-bottom: 2px;">SUPERFICIE TOTAL</div>
+              <div id="card-val-superficie" class="tabular-nums" style="color:#065F46; font-weight:700; font-size: 1rem;">-</div>
+            </div>
+            <div class="col-3">
+              <div class="form-label" style="font-size: 0.72rem; margin-bottom: 2px;">SUPERFICIE DISPONIBLE</div>
+              <div id="card-val-sup-disp" class="tabular-nums" style="color:#047857; font-weight:600;">-</div>
+            </div>
+
+            <div class="col-3">
+              <div class="form-label" style="font-size: 0.72rem; margin-bottom: 2px;">RESOLUCIÓN TF</div>
+              <div id="card-val-resolucion" style="font-weight:600; font-size: 0.88rem;">-</div>
+            </div>
+            <div class="col-3">
+              <div class="form-label" style="font-size: 0.72rem; margin-bottom: 2px;">FECHA RESOLUCIÓN</div>
+              <div id="card-val-fecha-res" class="tabular-nums" style="font-weight:600; font-size: 0.88rem;">-</div>
+            </div>
+            <div class="col-3">
+              <div class="form-label" style="font-size: 0.72rem; margin-bottom: 2px;">DEPARTAMENTO</div>
+              <div id="card-val-depto" style="font-weight:600; font-size: 0.88rem;">-</div>
+            </div>
+            <div class="col-3">
+              <div class="form-label" style="font-size: 0.72rem; margin-bottom: 2px;">MUNICIPIO / PROVINCIA</div>
+              <div id="card-val-municipio" style="font-weight:600; font-size: 0.88rem;">-</div>
+            </div>
+
+            <div class="col-3">
+              <div class="form-label" style="font-size: 0.72rem; margin-bottom: 2px;">N° ARCHIVADOR</div>
+              <div id="card-val-archivador" style="font-weight:600;">-</div>
+            </div>
+            <div class="col-3">
+              <div class="form-label" style="font-size: 0.72rem; margin-bottom: 2px;">CUERPOS</div>
+              <div id="card-val-cuerpos" class="tabular-nums" style="font-weight:600;">1</div>
+            </div>
+            <div class="col-3">
+              <div class="form-label" style="font-size: 0.72rem; margin-bottom: 2px;">GAVETERO / CAJA</div>
+              <div id="card-val-gavetero" style="font-weight:600;">-</div>
+            </div>
+            <div class="col-3">
+              <div class="form-label" style="font-size: 0.72rem; margin-bottom: 2px;">CUSTODIA ACTUAL</div>
+              <div id="card-val-custodia" style="font-weight:600;">-</div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-end gap-2">
+            <button type="button" id="card-btn-salida" class="btn btn-warning" data-role-required="editor">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><path d="M9 18l6-6-6-6"/></svg>
+              Remitir a otra Dirección
+            </button>
+            <button type="button" id="card-btn-retorno" class="btn btn-success" data-role-required="editor">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+              Registrar Retorno al Archivo
+            </button>
+            <a href="#" id="card-btn-ficha" class="btn btn-outline-primary">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              Ver Ficha Técnica Completa
+            </a>
+          </div>
+        </div>
+
+        <!-- FILTROS DE HISTORIAL -->
+        <div class="filter-bar">
+          <div class="search-input-wrapper">
+            <span class="search-input-icon">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </span>
+            <input type="text" id="rem-filter-search" class="form-control" placeholder="Buscar movimientos por CODPRED, Expediente, HR o Nota...">
+          </div>
+          <div style="min-width: 170px;">
+            <select id="rem-filter-tipo" class="form-select">
+              <option value="">Todos los Movimientos</option>
+              <option value="SALIDA">Solo SALIDAS (Remitidos)</option>
+              <option value="RETORNO">Solo RETORNOS (En Archivo)</option>
+            </select>
+          </div>
+          <button id="rem-btn-clear" class="btn btn-secondary btn-sm">Limpiar</button>
+        </div>
+
+        <!-- TABLA DE HISTORIAL DE MOVIMIENTOS -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Historial Completo de Movimientos de Expedientes</div>
+            <div id="rem-count" class="text-muted" style="font-size: 0.82rem;">Cargando...</div>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Tipo</th>
+                  <th>CODPRED</th>
+                  <th>N° Expediente</th>
+                  <th>Predio / Depto</th>
+                  <th>Destino / Ubicación</th>
+                  <th>Motivo de la Remisión</th>
+                  <th>Nota y Hoja de Ruta</th>
+                  <th>Cuerpos / Fojas</th>
+                  <th>Funcionario Encargado</th>
+                  <th>Fecha Registro</th>
+                </tr>
+              </thead>
+              <tbody id="rem-tbody">
+                <tr><td colspan="10" style="text-align: center; padding: 30px;"><div class="spinner"></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- MODAL PARA REGISTRAR MOVIMIENTO -->
+  <div class="modal-overlay" id="movimiento-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-title">Registrar Movimiento de Expediente</h3>
+        <button class="modal-close" id="btn-close-modal">&times;</button>
+      </div>
+      <form id="movimiento-form">
+        <input type="hidden" id="mov-tipo" name="mov-tipo" value="SALIDA">
+        <input type="hidden" id="mov-codpred-hidden" required>
+
+        <div class="modal-body">
+          <div class="form-grid">
+            <!-- BUSCADOR CON AUTOCOMPLETE DENTRO DEL MODAL -->
+            <div class="col-12 form-group" style="position: relative;">
+              <label class="form-label required">Buscar y Seleccionar Tierra Fiscal / Expediente</label>
+              <input type="text" id="modal-search-predio" class="form-control" placeholder="Escriba CODPRED, Expediente o Nombre de Predio para buscar..." autocomplete="off">
+              <div id="modal-search-dropdown" class="search-results-dropdown"></div>
+              <div id="modal-selected-tag" class="selected-predio-tag" style="display: none;">
+                <span id="modal-selected-text"></span>
+                <button type="button" id="btn-clear-selection" style="background:none; border:none; cursor:pointer; color:#C62828; font-weight:bold;">✕ Cambiar</button>
+              </div>
+            </div>
+
+            <div class="col-6 form-group">
+              <label class="form-label">CODPRED Validado</label>
+              <input type="text" id="mov-codpred-display" class="form-control" readonly style="background:#ECEFF1; font-weight:bold;">
+            </div>
+
+            <div class="col-6 form-group">
+              <label class="form-label">N° de Expediente</label>
+              <input type="text" id="mov-expediente" class="form-control" placeholder="Ej: EXP-2026-089">
+            </div>
+
+            <div class="col-12 form-group" id="group-destino">
+              <label class="form-label required">Dirección de Destino</label>
+              <select id="mov-destino" class="form-select"></select>
+            </div>
+
+            <div class="col-12 form-group">
+              <label class="form-label required">Motivo del Trámite</label>
+              <input type="text" id="mov-motivo" class="form-control" placeholder="Ej: Solicitud de informe técnico legal..." required>
+            </div>
+
+            <div class="col-6 form-group">
+              <label class="form-label required" id="lbl-nota">CITE de Nota de Remisión</label>
+              <input type="text" id="mov-nota" class="form-control" placeholder="Ej: DGAT-CI N° 340/2026" required>
+            </div>
+
+            <div class="col-6 form-group">
+              <label class="form-label required" id="lbl-hr">Hoja de Ruta (HR)</label>
+              <input type="text" id="mov-hr" class="form-control" placeholder="Ej: DN HRI N° 12450/2026" required>
+            </div>
+
+            <div class="col-4 form-group">
+              <label class="form-label required">N° de Cuerpos</label>
+              <input type="number" id="mov-cuerpos" class="form-control" value="1" min="1" required>
+            </div>
+
+            <div class="col-4 form-group">
+              <label class="form-label">N° de Fojas</label>
+              <input type="number" id="mov-fojas" class="form-control" placeholder="Ej: 250">
+            </div>
+
+            <div class="col-4 form-group">
+              <label class="form-label required" id="lbl-funcionario">Funcionario Encargado</label>
+              <input type="text" id="mov-funcionario" class="form-control" placeholder="Nombre completo" required>
+            </div>
+
+            <div class="col-12 form-group">
+              <label class="form-label">Observaciones Adicionales</label>
+              <textarea id="mov-obs" class="form-textarea" rows="2"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="btn-cancel-modal">Cancelar</button>
+          <button type="submit" id="btn-submit-mov" class="btn btn-primary">Registrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/app-bundle.js"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    const perfil = await window.INRA.checkAuthGuard('lectura');
+    if (!perfil) return;
+    document.getElementById('btn-logout').addEventListener('click', INRA.logout);
+
+    let activePredio = null;
+
+    const params = new URLSearchParams(window.location.search);
+    const urlCodpred = params.get('codpred');
+
+    // Elementos
+    const lookupInput = document.getElementById('lookup-exp-input');
+    const lookupClearBtn = document.getElementById('lookup-clear-btn');
+    const lookupDropdown = document.getElementById('lookup-results-dropdown');
+    const lookupCard = document.getElementById('exp-lookup-card');
+    const cardTitle = document.getElementById('card-exp-title');
+    const cardSub = document.getElementById('card-exp-sub');
+    const cardBadge = document.getElementById('card-exp-ubicacion-badge');
+    const cardCustodiaBanner = document.getElementById('card-custodia-banner');
+    const cardCustodiaText = document.getElementById('card-custodia-text');
+    const cardCodpred = document.getElementById('card-val-codpred');
+    const cardEstadoGlobal = document.getElementById('card-val-estado-global');
+    const cardSuperficie = document.getElementById('card-val-superficie');
+    const cardSupDisp = document.getElementById('card-val-sup-disp');
+    const cardResolucion = document.getElementById('card-val-resolucion');
+    const cardFechaRes = document.getElementById('card-val-fecha-res');
+    const cardDepto = document.getElementById('card-val-depto');
+    const cardMunicipio = document.getElementById('card-val-municipio');
+    const cardArchivador = document.getElementById('card-val-archivador');
+    const cardCuerpos = document.getElementById('card-val-cuerpos');
+    const cardGavetero = document.getElementById('card-val-gavetero');
+    const cardCustodia = document.getElementById('card-val-custodia');
+    const cardBtnSalida = document.getElementById('card-btn-salida');
+    const cardBtnRetorno = document.getElementById('card-btn-retorno');
+    const cardBtnFicha = document.getElementById('card-btn-ficha');
+    const cardBtnClose = document.getElementById('card-btn-close');
+
+    // Botón cerrar tarjeta
+    if (cardBtnClose) {
+      cardBtnClose.addEventListener('click', () => {
+        lookupCard.style.display = 'none';
+        activePredio = null;
+      });
+    }
+
+    // Botón limpiar input
+    if (lookupClearBtn) {
+      lookupClearBtn.addEventListener('click', () => {
+        lookupInput.value = '';
+        lookupClearBtn.style.display = 'none';
+        lookupDropdown.style.display = 'none';
+        lookupInput.focus();
+      });
+    }
+
+    // Cerrar dropdowns al hacer clic fuera o presionar Escape
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.localizador-input-wrap')) {
+        lookupDropdown.style.display = 'none';
+      }
+      if (!e.target.closest('#modal-search-predio') && !e.target.closest('#modal-search-dropdown')) {
+        modalSearchDropdown.style.display = 'none';
+      }
+    });
+
+    lookupInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') lookupDropdown.style.display = 'none';
+    });
+
+    lookupInput.addEventListener('focus', () => {
+      if (lookupDropdown.children.length > 0 && lookupInput.value.trim().length >= 2) {
+        lookupDropdown.style.display = 'block';
+      }
+    });
+
+    // Elementos Modal
+    const modal = document.getElementById('movimiento-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const movForm = document.getElementById('movimiento-form');
+    const movTipo = document.getElementById('mov-tipo');
+    const movCodpredHidden = document.getElementById('mov-codpred-hidden');
+    const movCodpredDisplay = document.getElementById('mov-codpred-display');
+    const movExpediente = document.getElementById('mov-expediente');
+    const movDestino = document.getElementById('mov-destino');
+    const groupDestino = document.getElementById('group-destino');
+    const movMotivo = document.getElementById('mov-motivo');
+    const movNota = document.getElementById('mov-nota');
+    const movHr = document.getElementById('mov-hr');
+    const movCuerpos = document.getElementById('mov-cuerpos');
+    const movFojas = document.getElementById('mov-fojas');
+    const movFuncionario = document.getElementById('mov-funcionario');
+    const movObs = document.getElementById('mov-obs');
+    const lblNota = document.getElementById('lbl-nota');
+    const lblHr = document.getElementById('lbl-hr');
+    const lblFuncionario = document.getElementById('lbl-funcionario');
+    const modalSearchPredio = document.getElementById('modal-search-predio');
+    const modalSearchDropdown = document.getElementById('modal-search-dropdown');
+    const modalSelectedTag = document.getElementById('modal-selected-tag');
+    const modalSelectedText = document.getElementById('modal-selected-text');
+    const btnClearSelection = document.getElementById('btn-clear-selection');
+
+    // Poblado de Destinos
+    const direcciones = [
+      'DIRECCIÓN GENERAL DE ASUNTOS JURÍDICOS',
+      'DIRECCIÓN NACIONAL DE SANEAMIENTO',
+      'DIRECCIÓN GENERAL DE CATASTRO',
+      'DIRECCIÓN DEPARTAMENTAL BENI',
+      'DIRECCIÓN DEPARTAMENTAL SANTA CRUZ',
+      'DIRECCIÓN DEPARTAMENTAL LA PAZ',
+      'DIRECCIÓN DEPARTAMENTAL COCHABAMBA',
+      'DIRECCIÓN DEPARTAMENTAL PANDO',
+      'DIRECCIÓN DEPARTAMENTAL CHUQUISACA',
+      'DIRECCIÓN DEPARTAMENTAL TARIJA',
+      'TRIBUNAL AGROAMBIENTAL',
+      'MINISTERIO PÚBLICO / JUZGADO',
+      'UNIDAD TÉCNICA DE ARCHIVO'
+    ];
+    movDestino.innerHTML = '<option value="">Seleccione Dirección de Destino...</option>' + 
+      direcciones.map(d => '<option value="' + d + '">' + d + '</option>').join('');
+
+    // Búsqueda en el Localizador Principal
+    let debounceTimer;
+    lookupInput.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      const query = lookupInput.value.trim();
+      lookupClearBtn.style.display = query.length > 0 ? 'flex' : 'none';
+
+      if (query.length < 2) {
+        lookupDropdown.style.display = 'none';
+        return;
+      }
+      debounceTimer = setTimeout(async () => {
+        const results = await window.INRA.buscarPrediosParaRemision(query);
+        if (!results || results.length === 0) {
+          lookupDropdown.innerHTML = '<div class="search-result-item text-muted" style="padding:16px; text-align:center;">No se encontraron expedientes ni tierras fiscales con ese criterio</div>';
+        } else {
+          lookupDropdown.innerHTML = results.map(r => {
+            const isRemitido = r._estadoCustodia === 'REMITIDO';
+            const badgeCustodia = isRemitido 
+              ? '<span class="exp-badge-remitido" style="font-size:0.75rem;">Remitido: ' + (r._ubicacionActual || 'Otra Dirección') + '</span>'
+              : '<span class="exp-badge-archivo" style="font-size:0.75rem;">En Archivo Central</span>';
+            
+            let badgeEstado = '<span class="badge badge-success" style="font-size:0.72rem;">' + (r.estado_global || 'TIERRA FISCAL VIGENTE') + '</span>';
+            if (r.estado_global && r.estado_global.includes('CONTENCIOSO')) {
+              badgeEstado = '<span class="badge badge-danger" style="font-size:0.72rem;">CONTENCIOSO</span>';
+            } else if (r.estado_global && r.estado_global.includes('COMPENSADA')) {
+              badgeEstado = '<span class="badge badge-warning" style="font-size:0.72rem;">COMPENSADA TCO</span>';
+            } else if (r.estado_global && r.estado_global.includes('ANULADA')) {
+              badgeEstado = '<span class="badge badge-neutral" style="font-size:0.72rem;">ANULADA</span>';
+            }
+
+            const supTot = r.superficie_predio ? window.INRA.formatHectareas(r.superficie_predio) : '-';
+            const supDisp = r.sup_disp ? window.INRA.formatHectareas(r.sup_disp) : supTot;
+            const resInfo = (r.resolucion_tf || 'Sin Resolución') + (r.fecha_res_tf ? ' (' + window.INRA.formatDate(r.fecha_res_tf) + ')' : '');
+            const ubiInfo = (r.departamento || '-') + (r.municipio ? ' · ' + r.municipio : '') + (r.provincia ? ' (' + r.provincia + ')' : '');
+
+            return (
+              '<div class="search-result-item" data-json="' + encodeURIComponent(JSON.stringify(r)) + '">' +
+                '<div class="d-flex justify-between align-center mb-1">' +
+                  '<span style="font-weight:700; font-size: 0.95rem; color: #0F172A;">' +
+                    '<span class="tabular-nums" style="color:var(--color-primary);">' + r.codpred + '</span> — ' + (r.nombre_predio || 'Tierra Fiscal') +
+                    (r.expediente ? ' <span style="background:#ECFDF5; color:#065F46; font-weight:700; padding:2px 7px; border-radius:4px; font-size:0.82rem; margin-left:4px;">Exp. ' + r.expediente + '</span>' : '') +
+                  '</span>' +
+                  '<div class="d-flex gap-1 align-center">' + badgeEstado + badgeCustodia + '</div>' +
+                '</div>' +
+                '<div style="font-size:0.82rem; color:#475569; display:flex; flex-wrap:wrap; gap:12px; margin-top:4px;">' +
+                  '<span><strong>Superficie:</strong> ' + supTot + ' ha (Disp: ' + supDisp + ' ha)</span>' +
+                  '<span><strong>Resolución:</strong> ' + resInfo + '</span>' +
+                  '<span><strong>Ubicación:</strong> ' + ubiInfo + '</span>' +
+                  '<span><strong>Archivador:</strong> ' + (r.numero_archivador || 'S/A') + '</span>' +
+                '</div>' +
+              '</div>'
+            );
+          }).join('');
+        }
+        lookupDropdown.style.display = 'block';
+      }, 250);
+    });
+
+    lookupDropdown.addEventListener('click', (e) => {
+      const item = e.target.closest('.search-result-item');
+      if (!item || !item.dataset.json) return;
+      const data = JSON.parse(decodeURIComponent(item.dataset.json));
+      seleccionarPredioParaCard(data);
+      lookupDropdown.style.display = 'none';
+      lookupInput.value = (data.expediente ? data.expediente + ' - ' : '') + data.codpred;
+    });
+
+    function seleccionarPredioParaCard(data) {
+      activePredio = data;
+      cardTitle.textContent = (data.expediente ? 'Expediente N° ' + data.expediente : 'Expediente s/n') + ' — ' + (data.nombre_predio || 'Tierra Fiscal');
+      cardSub.textContent = 'CODPRED: ' + data.codpred + (data.resolucion_tf ? ' | Resolución TF: ' + data.resolucion_tf : '');
+      cardCodpred.textContent = data.codpred;
+
+      let badgeEstado = '<span class="badge badge-success">' + (data.estado_global || 'TIERRA FISCAL VIGENTE') + '</span>';
+      if (data.estado_global && data.estado_global.includes('CONTENCIOSO')) {
+        badgeEstado = '<span class="badge badge-danger">CONTENCIOSO</span>';
+      } else if (data.estado_global && data.estado_global.includes('COMPENSADA')) {
+        badgeEstado = '<span class="badge badge-warning">COMPENSADA TCO</span>';
+      } else if (data.estado_global && data.estado_global.includes('ANULADA')) {
+        badgeEstado = '<span class="badge badge-neutral">ANULADA</span>';
+      }
+      cardEstadoGlobal.innerHTML = badgeEstado;
+
+      const supTot = data.superficie_predio ? (window.INRA.formatHectareas(data.superficie_predio) + ' ha') : '0.0000 ha';
+      const supDisp = data.sup_disp ? (window.INRA.formatHectareas(data.sup_disp) + ' ha') : supTot;
+      cardSuperficie.textContent = supTot;
+      cardSupDisp.textContent = supDisp;
+
+      cardResolucion.textContent = data.resolucion_tf || 'Sin resolución registrada';
+      cardFechaRes.textContent = data.fecha_res_tf ? window.INRA.formatDate(data.fecha_res_tf) : 'Sin fecha';
+      cardDepto.textContent = data.departamento || 'Sin registro';
+      cardMunicipio.textContent = (data.municipio ? data.municipio : '') + (data.provincia ? ' (' + data.provincia + ')' : '') || 'Sin registro';
+      cardArchivador.textContent = data.numero_archivador || 'No asignado';
+      cardCuerpos.textContent = (data.cuerpos || 1) + ' cuerpo(s)';
+      cardGavetero.textContent = (data.gavetero ? 'Gav. ' + data.gavetero : '') + (data.caja ? ' · Caja ' + data.caja : '') || 'No especificado';
+
+      const isRemitido = data._estadoCustodia === 'REMITIDO';
+      const badgeCustodia = isRemitido 
+        ? '<span class="exp-badge-remitido">Remitido: ' + (data._ubicacionActual || 'Otra Dirección') + '</span>'
+        : '<span class="exp-badge-archivo">En Archivo Central</span>';
+      cardCustodia.innerHTML = badgeCustodia;
+      cardBadge.innerHTML = badgeCustodia;
+      cardBtnFicha.href = 'tf-detalle.html?codpred=' + encodeURIComponent(data.codpred);
+
+      if (isRemitido) {
+        cardCustodiaBanner.className = 'custodia-banner custodia-banner-remitido';
+        let textoBanner = '<strong>EXPEDIENTE FUERA DE CUSTODIA:</strong> Actualmente se encuentra remitido a <strong>' + data._ubicacionActual + '</strong>';
+        if (data._ultimoMovimiento) {
+          if (data._ultimoMovimiento.created_at) {
+            textoBanner += ' desde el <strong>' + window.INRA.formatDate(data._ultimoMovimiento.created_at.slice(0,10)) + '</strong>';
+          }
+          if (data._ultimoMovimiento.funcionario_remitente) {
+            textoBanner += ' (Remitente: <strong>' + data._ultimoMovimiento.funcionario_remitente + '</strong>)';
+          }
+          if (data._ultimoMovimiento.hr_remision) {
+            textoBanner += ' — HR: <strong>' + data._ultimoMovimiento.hr_remision + '</strong>';
+          }
+          if (data._ultimoMovimiento.nota_remision) {
+            textoBanner += ' — CITE: <strong>' + data._ultimoMovimiento.nota_remision + '</strong>';
+          }
+          if (data._ultimoMovimiento.motivo) {
+            textoBanner += '<br><span style="font-size:0.82rem; color:#92400E;">Motivo: ' + data._ultimoMovimiento.motivo + '</span>';
+          }
+        }
+        cardCustodiaText.innerHTML = textoBanner;
+        cardBtnRetorno.className = 'btn btn-success';
+        cardBtnSalida.className = 'btn btn-secondary';
+      } else {
+        cardCustodiaBanner.className = 'custodia-banner custodia-banner-archivo';
+        cardCustodiaText.innerHTML = '<strong>EXPEDIENTE EN ARCHIVO:</strong> Físicamente en inventario de custodia en la Dirección de Administración de Tierras Fiscales.';
+        cardBtnSalida.className = 'btn btn-warning';
+        cardBtnRetorno.className = 'btn btn-secondary';
+      }
+
+      lookupCard.style.display = 'block';
+      lookupCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    cardBtnSalida.addEventListener('click', () => {
+      if (activePredio) abrirModal('SALIDA', activePredio);
+    });
+
+    cardBtnRetorno.addEventListener('click', () => {
+      if (activePredio) abrirModal('RETORNO', activePredio);
+    });
+
+    // Búsqueda dentro del Modal
+    let modalDebounce;
+    modalSearchPredio.addEventListener('input', () => {
+      clearTimeout(modalDebounce);
+      const query = modalSearchPredio.value.trim();
+      if (query.length < 2) {
+        modalSearchDropdown.style.display = 'none';
+        return;
+      }
+      modalDebounce = setTimeout(async () => {
+        const results = await window.INRA.buscarPrediosParaRemision(query);
+        if (!results || results.length === 0) {
+          modalSearchDropdown.innerHTML = '<div class="search-result-item text-muted">No se encontraron predios</div>';
+        } else {
+          modalSearchDropdown.innerHTML = results.map(r => 
+            '<div class="search-result-item" data-json="' + encodeURIComponent(JSON.stringify(r)) + '">' +
+              '<div style="font-weight:700;">' + r.codpred + ' - ' + (r.nombre_predio || 'S/N') + '</div>' +
+              '<div style="font-size:0.8rem; color:#666;">Exp: ' + (r.expediente || 'S/E') + ' | Archivador: ' + (r.numero_archivador || 'S/A') + '</div>' +
+            '</div>'
+          ).join('');
+        }
+        modalSearchDropdown.style.display = 'block';
+      }, 250);
+    });
+
+    modalSearchDropdown.addEventListener('click', (e) => {
+      const item = e.target.closest('.search-result-item');
+      if (!item || !item.dataset.json) return;
+      const data = JSON.parse(decodeURIComponent(item.dataset.json));
+      setModalPredio(data);
+      modalSearchDropdown.style.display = 'none';
+    });
+
+    function setModalPredio(data) {
+      movCodpredHidden.value = data.codpred;
+      movCodpredDisplay.value = data.codpred;
+      if (data.expediente) movExpediente.value = data.expediente;
+      if (data.cuerpos) movCuerpos.value = data.cuerpos;
+      modalSearchPredio.style.display = 'none';
+      modalSelectedText.textContent = 'Seleccionado: ' + data.codpred + ' - ' + (data.nombre_predio || 'Tierra Fiscal') + ' (Exp: ' + (data.expediente || 'S/E') + ')';
+      modalSelectedTag.style.display = 'flex';
+    }
+
+    btnClearSelection.addEventListener('click', () => {
+      movCodpredHidden.value = '';
+      movCodpredDisplay.value = '';
+      modalSearchPredio.value = '';
+      modalSearchPredio.style.display = 'block';
+      modalSelectedTag.style.display = 'none';
+      modalSearchPredio.focus();
+    });
+
+    function abrirModal(tipo, prefillData = null) {
+      movForm.reset();
+      movTipo.value = tipo;
+      modalTitle.textContent = tipo === 'SALIDA' 
+        ? 'Registrar Salida de Expediente (Remisión a otra Dirección)' 
+        : 'Registrar Retorno de Expediente al Archivo';
+
+      if (tipo === 'SALIDA') {
+        groupDestino.style.display = 'block';
+        movDestino.required = true;
+        lblNota.textContent = 'CITE de Nota de Remisión';
+        lblHr.textContent = 'Hoja de Ruta (HR)';
+        lblFuncionario.textContent = 'Funcionario Remitente';
+      } else {
+        groupDestino.style.display = 'none';
+        movDestino.required = false;
+        lblNota.textContent = 'CITE Nota de Devolución / Retorno';
+        lblHr.textContent = 'Hoja de Ruta de Devolución';
+        lblFuncionario.textContent = 'Funcionario que Recibe en Archivo';
+      }
+
+      if (prefillData) {
+        setModalPredio(prefillData);
+      } else {
+        btnClearSelection.click();
+      }
+
+      modal.classList.add('active');
+    }
+
+    document.getElementById('btn-open-modal-salida').addEventListener('click', () => abrirModal('SALIDA'));
+    document.getElementById('btn-open-modal-retorno').addEventListener('click', () => abrirModal('RETORNO'));
+    document.getElementById('btn-close-modal').addEventListener('click', () => modal.classList.remove('active'));
+    document.getElementById('btn-cancel-modal').addEventListener('click', () => modal.classList.remove('active'));
+
+    // Registro de Movimiento
+    movForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!movCodpredHidden.value) {
+        window.INRA.showToast('Debe buscar y seleccionar una Tierra Fiscal / Expediente válido', 'error');
+        return;
+      }
+
+      const tipo = movTipo.value;
+      const movimientoData = {
+        codpred: movCodpredHidden.value,
+        expediente: movExpediente.value.trim() || null,
+        tipo_movimiento: tipo,
+        direccion_destino: tipo === 'SALIDA' ? movDestino.value : 'ARCHIVO CENTRAL / CUSTODIA TF',
+        motivo: movMotivo.value.trim(),
+        nota_remision: movNota.value.trim(),
+        fecha_nota: new Date().toISOString().split('T')[0],
+        hr_remision: movHr.value.trim(),
+        fecha_hr: new Date().toISOString().split('T')[0],
+        nro_cuerpos: parseInt(movCuerpos.value, 10) || 1,
+        nro_fojas: movFojas.value ? parseInt(movFojas.value, 10) : null,
+        funcionario_remitente: movFuncionario.value.trim(),
+        obs_remision: movObs.value.trim() || null
+      };
+
+      try {
+        const res = await window.INRA.registrarMovimiento(movimientoData, tipo);
+        if (res && res.error) throw res.error;
+        window.INRA.showToast('Movimiento de ' + tipo + ' registrado con éxito', 'success');
+        modal.classList.remove('active');
+        await cargarHistorial();
+
+        // Refrescar la tarjeta si el predio seleccionado es el mismo
+        if (activePredio && activePredio.codpred === movimientoData.codpred) {
+          const updatedResults = await window.INRA.buscarPrediosParaRemision(activePredio.codpred);
+          if (updatedResults && updatedResults.length > 0) {
+            const exact = updatedResults.find(r => r.codpred === activePredio.codpred) || updatedResults[0];
+            seleccionarPredioParaCard(exact);
+          }
+        }
+      } catch (err) {
+        console.error(err);
+        window.INRA.showToast('Error al registrar movimiento: ' + (err.message || err), 'error');
+      }
+    });
+
+    // Cargar Historial
+    async function cargarHistorial() {
+      const tbody = document.getElementById('rem-tbody');
+      const countEl = document.getElementById('rem-count');
+      const searchVal = document.getElementById('rem-filter-search').value.trim();
+      const tipoVal = document.getElementById('rem-filter-tipo').value;
+
+      tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding: 25px;"><div class="spinner"></div></td></tr>';
+
+      try {
+        const sb = window.INRA.getSupabase();
+        if (!sb) throw new Error('Sin conexión a Supabase');
+        let query = sb
+          .from('remision_expedientes')
+          .select('id, codpred, expediente, tipo_movimiento, direccion_destino, motivo, nota_remision, hr_remision, nro_cuerpos, nro_fojas, funcionario_remitente, created_at, tierras_fiscales(nombre_predio, departamento)')
+          .order('created_at', { ascending: false })
+          .limit(200);
+
+        if (tipoVal) query = query.eq('tipo_movimiento', tipoVal);
+        if (searchVal) {
+          query = query.or('codpred.ilike.%' + searchVal + '%,expediente.ilike.%' + searchVal + '%,hr_remision.ilike.%' + searchVal + '%,nota_remision.ilike.%' + searchVal + '%');
+        }
+
+        const { data, error } = await query;
+        if (error) throw error;
+
+        countEl.textContent = (data ? data.length : 0) + ' movimiento(s) registrado(s)';
+
+        if (!data || data.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding: 30px; color: #777;">No se registraron movimientos documentales todavía.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = data.map(m => {
+          const isSalida = m.tipo_movimiento === 'SALIDA';
+          const badge = isSalida 
+            ? '<span class="badge badge-warning">SALIDA</span>' 
+            : '<span class="badge badge-success">RETORNO</span>';
+          const predioNombre = m.tierras_fiscales ? (m.tierras_fiscales.nombre_predio || '-') : '-';
+          const depto = m.tierras_fiscales ? (m.tierras_fiscales.departamento || '-') : '-';
+          const fecha = m.created_at ? new Date(m.created_at).toLocaleDateString('es-BO', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-';
+
+          return '<tr>' +
+            '<td>' + badge + '</td>' +
+            '<td class="tabular-nums"><strong style="color:var(--color-primary);">' + m.codpred + '</strong></td>' +
+            '<td><strong>' + (m.expediente || 'S/N') + '</strong></td>' +
+            '<td><div>' + predioNombre + '</div><small class="text-muted">' + depto + '</small></td>' +
+            '<td><span style="font-weight:600; color:' + (isSalida ? '#991B1B' : '#065F46') + '">' + (m.direccion_destino || '-') + '</span></td>' +
+            '<td><small>' + (m.motivo || '-') + '</small></td>' +
+            '<td><div><small><strong>Nota:</strong> ' + (m.nota_remision || '-') + '</small></div><div><small><strong>HR:</strong> ' + (m.hr_remision || '-') + '</small></div></td>' +
+            '<td style="text-align:center;">' + (m.nro_cuerpos || 1) + ' c. / ' + (m.nro_fojas || '-') + ' f.</td>' +
+            '<td><small>' + (m.funcionario_remitente || '-') + '</small></td>' +
+            '<td><small class="text-muted">' + fecha + '</small></td>' +
+          '</tr>';
+        }).join('');
+
+      } catch (err) {
+        console.error(err);
+        tbody.innerHTML = '<tr><td colspan="10" style="color:red; text-align:center; padding: 20px;">Error al cargar historial: ' + (err.message || err) + '</td></tr>';
+      }
+    }
+
+    document.getElementById('rem-filter-tipo').addEventListener('change', cargarHistorial);
+    document.getElementById('rem-filter-search').addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(cargarHistorial, 300);
+    });
+    document.getElementById('rem-btn-clear').addEventListener('click', () => {
+      document.getElementById('rem-filter-search').value = '';
+      document.getElementById('rem-filter-tipo').value = '';
+      cargarHistorial();
+    });
+
+    await cargarHistorial();
+
+    if (urlCodpred) {
+      const results = await window.INRA.buscarPrediosParaRemision(urlCodpred);
+      if (results && results.length > 0) {
+        const match = results.find(r => r.codpred === urlCodpred) || results[0];
+        seleccionarPredioParaCard(match);
+        lookupInput.value = match.codpred;
+        if (lookupClearBtn) lookupClearBtn.style.display = 'flex';
+      }
+    }
+  });
+  </script>
+</body>
+</html>
