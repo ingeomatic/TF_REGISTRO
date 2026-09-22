@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acceso al Sistema - Dirección General de Administración de Tierras Fiscales</title>
+  <link rel="icon" type="image/svg+xml" href="assets/logo-dgatf.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css?v=20260921_4">
+  <link rel="stylesheet" href="css/components.css?v=20260921_4">
+  <style>
+    :root {
+      --hero-bg-start: #021E17;
+      --hero-bg-mid: #063D2F;
+      --hero-bg-end: #01140F;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      font-family: var(--font-sans);
+      background-color: #F8FAFC;
+      color: #0F172A;
+      overflow-x: hidden;
+    }
+
+    .login-split-container {
+      display: flex;
+      width: 100vw;
+      min-height: 100vh;
+    }
+
+    /* === PANEL IZQUIERDO: VISUAL, MINIMALISTA, INSTITUCIONAL === */
+    .hero-panel {
+      flex: 1.1;
+      background: linear-gradient(150deg, var(--hero-bg-start) 0%, var(--hero-bg-mid) 50%, var(--hero-bg-end) 100%);
+      color: #FFFFFF;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 48px 40px;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    /* Patrón de fondo cadastral y curvas topográficas */
+    .hero-bg-grid {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0.07;
+      background-image: linear-gradient(to right, #10B981 1px, transparent 1px),
+                        linear-gradient(to bottom, #10B981 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    .hero-bg-curves {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 120%;
+      height: 120%;
+      pointer-events: none;
+      opacity: 0.12;
+    }
+
+    .hero-header-top {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .hero-badge-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #6EE7B7;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hero-center-box {
+      position: relative;
+      z-index: 2;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: auto 0;
+    }
+
+    .hero-logo-wrapper {
+      width: 110px;
+      height: 110px;
+      margin-bottom: 24px;
+      filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.35));
+    }
+
+    .hero-logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .hero-main-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      line-height: 1.3;
+      letter-spacing: -0.015em;
+      color: #FFFFFF;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .hero-main-sub {
+      font-size: 0.95rem;
+      color: #94A3B8;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .hero-divider {
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, #EF4444 0%, #F59E0B 50%, #10B981 100%);
+      border-radius: 2px;
+      margin: 20px auto 0 auto;
+    }
+
+    .hero-footer-bottom {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      font-size: 0.72rem;
+      color: #64748B;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    /* === PANEL DERECHO: FORMULARIO ULTRA LIMPIO === */
+    .form-panel {
+      flex: 0.95;
+      background-color: #FFFFFF;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 48px 36px;
+      position: relative;
+    }
+
+    .form-inner-wrapper {
+      width: 100%;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-mobile-logo {
+      display: none;
+      width: 54px;
+      height: 54px;
+      margin-bottom: 18px;
+    }
+
+    .form-header-title {
+      font-size: 1.7rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: #0F172A;
+      margin-bottom: 6px;
+    }
+
+    .form-header-subtitle {
+      font-size: 0.88rem;
+      color: #64748B;
+      line-height: 1.5;
+      margin-bottom: 28px;
+    }
+
+    .custom-input-group {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-leading-icon {
+      position: absolute;
+      left: 14px;
+      color: #94A3B8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .input-leading-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .custom-input-group .form-control {
+      padding-left: 44px;
+      height: 44px;
+      font-size: 0.9rem;
+      border-radius: 8px;
+      border: 1px solid #CBD5E1;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      background-color: #FFFFFF;
+      width: 100%;
+    }
+
+    .custom-input-group .form-control:focus {
+      border-color: #064E3B;
+      box-shadow: 0 0 0 3px rgba(6, 78, 59, 0.12);
+      outline: none;
+    }
+
+    .btn-toggle-password {
+      position: absolute;
+      right: 12px;
+      background: none;
+      border: none;
+      color: #94A3B8;
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.15s ease;
+    }
+
+    .btn-toggle-password:hover {
+      color: #334155;
+    }
+
+    .btn-toggle-password svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .btn-login-submit {
+      height: 46px;
+      background-color: #064E3B;
+      color: #FFFFFF;
+      font-size: 0.92rem;
+      font-weight: 600;
+      border-radius: 8px;
+      border: 1px solid #022C22;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.15s ease;
+      margin-top: 8px;
+      box-shadow: 0 2px 6px rgba(6, 78, 59, 0.2);
+    }
+
+    .btn-login-submit:hover:not(:disabled) {
+      background-color: #047857;
+      box-shadow: 0 4px 12px rgba(4, 120, 87, 0.25);
+    }
+
+    .btn-login-submit:active:not(:disabled) {
+      background-color: #022C22;
+      transform: translateY(1px);
+    }
+
+    .btn-login-submit:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    /* Drawer de Configuración Avanzada */
+    .server-config-toggle {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .btn-link-advanced {
+      background: none;
+      border: none;
+      color: #64748B;
+      font-size: 0.78rem;
+      cursor: pointer;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: color 0.15s ease;
+    }
+
+    .btn-link-advanced:hover {
+      color: #0F172A;
+      text-decoration: underline;
+    }
+
+    .server-config-panel {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      padding: 18px;
+      margin-top: 14px;
+      display: none;
+    }
+
+    .server-config-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #1E293B;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legal-notice {
+      margin-top: 32px;
+      padding: 12px 14px;
+      background-color: #F8FAFC;
+      border-radius: 8px;
+      border: 1px solid #E2E8F0;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .legal-notice svg {
+      width: 16px;
+      height: 16px;
+      color: #64748B;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .legal-notice p {
+      font-size: 0.73rem;
+      color: #64748B;
+      line-height: 1.45;
+      margin: 0;
+    }
+
+    .btn-spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #FFFFFF;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* === RESPONSIVE (< 960px) === */
+    @media (max-width: 960px) {
+      .login-split-container {
+        flex-direction: column;
+      }
+      .hero-panel {
+        padding: 32px 20px;
+        min-height: auto;
+      }
+      .hero-logo-wrapper {
+        width: 72px;
+        height: 72px;
+        margin-bottom: 16px;
+      }
+      .hero-main-title {
+        font-size: 1.25rem;
+      }
+      .hero-main-sub {
+        font-size: 0.82rem;
+      }
+      .form-panel {
+        padding: 32px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-split-container">
+    
+    <!-- PANEL HERO INSTITUCIONAL DGATF (LIMPIO, VISUAL, SIN TEXTOS CARGADOS) -->
+    <section class="hero-panel">
+      <div class="hero-bg-grid"></div>
+
+      <!-- Curvas topográficas vectoriales elegantes -->
+      <svg class="hero-bg-curves" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="400" cy="400" r="180" stroke="#34D399" stroke-width="1.5" stroke-dasharray="6 6"/>
+        <circle cx="400" cy="400" r="280" stroke="#10B981" stroke-width="1.5"/>
+        <circle cx="400" cy="400" r="380" stroke="#059669" stroke-width="1" stroke-opacity="0.4"/>
+        <line x1="0" y1="400" x2="800" y2="400" stroke="#34D399" stroke-width="1" stroke-dasharray="4 4" stroke-opacity="0.3"/>
+        <line x1="400" y1="0" x2="400" y2="800" stroke="#34D399" stroke-width="1" stroke-dasharray="4 4" stroke-opacity="0.3"/>
+      </svg>
+
+      <div class="hero-header-top">
+        <div class="hero-badge-tag">
+          <span>DGATF • GESTIÓN TERRITORIAL</span>
+        </div>
+      </div>
+
+      <div class="hero-center-box">
+        <div class="hero-logo-wrapper">
+          <img src="assets/logo.png" onerror="this.onerror=null; this.src='assets/logo-dgatf.svg';" alt="DGATF Escudo Institucional" class="hero-logo-img">
+        </div>
+        <h1 class="hero-main-title">Dirección General de Administración de Tierras Fiscales</h1>
+        <div class="hero-main-sub">Sistema Registral de Tierras Fiscales</div>
+        <div class="hero-divider"></div>
+      </div>
+
+      <div class="hero-footer-bottom">
+        Estado Plurinacional de Bolivia
+      </div>
+    </section>
+
+    <!-- PANEL DERECHO: FORMULARIO DE ACCESO (SIN EL BADGE DE PORTAL OFICIAL) -->
+    <section class="form-panel">
+      <div class="form-inner-wrapper">
+        
+        <h2 class="form-header-title">Iniciar Sesión</h2>
+        <p class="form-header-subtitle">
+          Ingrese sus credenciales oficiales para acceder al sistema registral.
+        </p>
+
+        <!-- FORMULARIO -->
+        <form id="login-form" style="display: flex; flex-direction: column; gap: 18px;">
+          
+          <div class="form-group">
+            <label class="form-label" for="email">Correo Electrónico Institucional</label>
+            <div class="custom-input-group">
+              <span class="input-leading-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <polyline points="22,6 12,13 2,6"/>
+                </svg>
+              </span>
+              <input type="email" id="email" class="form-control" placeholder="usuario@dgatf.gob.bo" required autocomplete="username">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="password">Contraseña de Acceso</label>
+            <div class="custom-input-group">
+              <span class="input-leading-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+              </span>
+              <input type="password" id="password" class="form-control" placeholder="••••••••••••" required autocomplete="current-password" style="padding-right: 44px;">
+              <button type="button" class="btn-toggle-password" id="btn-toggle-pwd" title="Mostrar/Ocultar contraseña" tabindex="-1">
+                <svg id="pwd-icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" id="btn-submit-login" class="btn-login-submit">
+            <span id="btn-login-text">Ingresar al Sistema</span>
+            <svg id="btn-login-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </button>
+
+          <!-- Drawer Colapsable de Conexión de Servidor -->
+          <div class="server-config-toggle">
+            <button type="button" id="btn-show-cfg" class="btn-link-advanced">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+              </svg>
+              Configuración de Conexión de Servidor
+            </button>
+          </div>
+
+          <div class="server-config-panel" id="config-box">
+            <div class="server-config-title">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="2" width="20" height="8" rx="2" ry="2"/>
+                <rect x="2" y="14" width="20" height="8" rx="2" ry="2"/>
+                <line x1="6" y1="6" x2="6.01" y2="6"/>
+                <line x1="6" y1="18" x2="6.01" y2="18"/>
+              </svg>
+              Parámetros de Servidor Supabase
+            </div>
+            <div class="form-group mb-2">
+              <label class="form-label" style="font-size: 0.7rem; color: #475569;">Project URL</label>
+              <input type="text" id="cfg-url" class="form-control" style="font-size: 0.78rem; height: 34px;" placeholder="https://xyz.supabase.co">
+            </div>
+            <div class="form-group mb-3">
+              <label class="form-label" style="font-size: 0.7rem; color: #475569;">Anon Public Key</label>
+              <input type="password" id="cfg-key" class="form-control" style="font-size: 0.78rem; height: 34px;" placeholder="eyJhbGciOi...">
+            </div>
+            <button type="button" id="btn-save-cfg" class="btn btn-secondary btn-sm" style="width: 100%; height: 32px; font-weight: 600;">
+              Guardar Parámetros de Conexión
+            </button>
+          </div>
+        </form>
+
+        <!-- Aviso Legal y de Auditoría -->
+        <div class="legal-notice">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <p>
+            Acceso restringido a personal autorizado de la Dirección General de Administración de Tierras Fiscales. Todo ingreso es auditado y registrado.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+  <!-- SUPABASE JS Y SCRIPT PRINCIPAL -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/app-bundle.js?v=20260921_4"></script>
+
+  <script>
+    const sys = window.DGATF || window.INRA;
+
+    // Prellenar campos avanzados si existen
+    const cfg = sys.getSupabaseConfig();
+    if (cfg.url) document.getElementById('cfg-url').value = cfg.url;
+    if (cfg.key) document.getElementById('cfg-key').value = cfg.key;
+
+    // Toggle de visibilidad de contraseña
+    const pwdInput = document.getElementById('password');
+    const pwdToggle = document.getElementById('btn-toggle-pwd');
+    const eyeIcon = document.getElementById('pwd-icon-eye');
+
+    pwdToggle.addEventListener('click', function() {
+      const isPass = pwdInput.type === 'password';
+      pwdInput.type = isPass ? 'text' : 'password';
+      eyeIcon.innerHTML = isPass
+        ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>'
+        : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+    });
+
+    // Toggle panel de configuración avanzada
+    document.getElementById('btn-show-cfg').addEventListener('click', function() {
+      const box = document.getElementById('config-box');
+      box.style.display = box.style.display === 'none' || !box.style.display ? 'block' : 'none';
+    });
+
+    document.getElementById('btn-save-cfg').addEventListener('click', function() {
+      const u = document.getElementById('cfg-url').value.trim();
+      const k = document.getElementById('cfg-key').value.trim();
+      if (!u || !k) {
+        sys.showToast('Por favor ingrese tanto el Project URL como el Anon Key', 'warning');
+        return;
+      }
+      sys.setSupabaseConfig(u, k);
+      sys.showToast('Parámetros de conexión guardados correctamente', 'success');
+      document.getElementById('config-box').style.display = 'none';
+    });
+
+    // Envío del Formulario de Inicio de Sesión
+    document.getElementById('login-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const pass = document.getElementById('password').value;
+      const btn = document.getElementById('btn-submit-login');
+      const btnText = document.getElementById('btn-login-text');
+      const btnIcon = document.getElementById('btn-login-icon');
+
+      const customUrl = document.getElementById('cfg-url').value.trim();
+      const customKey = document.getElementById('cfg-key').value.trim();
+      if (customUrl && customKey) {
+        sys.setSupabaseConfig(customUrl, customKey);
+      }
+
+      try {
+        btn.disabled = true;
+        btnText.textContent = 'Verificando...';
+        btnIcon.outerHTML = '<div class="btn-spinner" id="btn-login-icon"></div>';
+
+        await sys.login(email, pass);
+        sys.showToast('Acceso correcto. Bienvenido a la DGATF.', 'success');
+        
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 400);
+      } catch (err) {
+        btn.disabled = false;
+        btnText.textContent = 'Ingresar al Sistema';
+        const spinner = document.getElementById('btn-login-icon');
+        if (spinner) {
+          spinner.outerHTML = `<svg id="btn-login-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
+        }
+        sys.showToast('Error de acceso: ' + (err.message || 'Credenciales no válidas'), 'danger');
+      }
+    });
+  </script>
+</body>
+</html>

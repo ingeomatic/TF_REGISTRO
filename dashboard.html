@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Control - Dirección General de Administración de Tierras Fiscales</title>
+  <link rel="icon" type="image/svg+xml" href="assets/logo-dgatf.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css?v=20260921_4">
+  <link rel="stylesheet" href="css/layout.css?v=20260921_4">
+  <link rel="stylesheet" href="css/components.css?v=20260921_4">
+  <link rel="stylesheet" href="css/dashboard.css?v=20260921_4">
+</head>
+<body>
+
+  <div class="app-wrapper">
+    <!-- BARRA LATERAL INSTITUCIONAL -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="assets/logo.png" onerror="this.onerror=null; this.src='assets/logo-dgatf.svg';" alt="DGATF" class="sidebar-logo-img" width="38" height="38">
+        <div class="sidebar-brand">
+          <div class="sidebar-brand-title">DGATF</div>
+          <div class="sidebar-brand-sub">TIERRAS FISCALES</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-menu">
+        <div class="sidebar-section-title">Principal</div>
+        <a href="dashboard.html" class="nav-link active">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          </span>
+          <span>Panel de Control</span>
+        </a>
+        <a href="tierras-fiscales.html" class="nav-link">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </span>
+          <span>Tierras Fiscales</span>
+        </a>
+        <a href="tf-detalle.html?nuevo=true" class="nav-link" data-role-required="editor">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          </span>
+          <span>Nuevo Registro</span>
+        </a>
+
+        <div class="sidebar-section-title">Archivo DGATF</div>
+        <a href="remisiones.html" class="nav-link">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          </span>
+          <span>Archivo DGATF</span>
+        </a>
+
+        <div class="sidebar-section-title" data-role-required="administrador">Sistema</div>
+        <a href="administracion.html" class="nav-link" data-role-required="administrador">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </span>
+          <span>Administración</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-snippet">
+          <div class="user-avatar" id="layout-user-avatar">U</div>
+          <div class="user-details">
+            <div class="user-name" id="layout-user-name">Usuario</div>
+            <div class="user-role-badge" id="layout-user-role">ACTIVO</div>
+          </div>
+        </div>
+        <button class="btn-logout" id="btn-logout" title="Cerrar Sesión">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <div class="topbar-institution">
+            <span>Dirección General de Administración de Tierras Fiscales</span>
+            <span class="topbar-badge-status"><span class="status-dot"></span>Servidor Operativo</span>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <span class="current-datetime" id="current-datetime">...</span>
+        </div>
+      </header>
+
+      <main class="page-container">
+        <div class="page-header">
+          <div class="page-title-group">
+            <h1>Panel de Control General</h1>
+            <div class="page-subtitle">Consolidado oficial de tierras fiscales a nivel nacional clasificado por Estado Global</div>
+          </div>
+          <div class="d-flex gap-2">
+            <a href="tierras-fiscales.html" class="btn btn-secondary">Explorar Registro Completo</a>
+            <a href="tf-detalle.html?nuevo=true" class="btn btn-primary" data-role-required="editor">Registrar Tierra Fiscal</a>
+          </div>
+        </div>
+
+        <!-- 5 TARJETAS MÉTRICAS KPI -->
+        <div class="stats-grid mb-4" style="grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));">
+          <!-- 1. TOTAL DE TIERRA FISCAL IDENTIFICADA -->
+          <div class="stat-card" style="border-left: 4px solid #064E3B;">
+            <div class="stat-card-header">
+              <span class="stat-label">Total TF Identificada</span>
+              <span class="stat-indicator stat-indicator-total" title="Total Consolidado en Base de Datos"></span>
+            </div>
+            <div class="stat-body">
+              <div class="stat-number" id="stat-total-tf">
+                <span class="spinner" style="width: 16px; height: 16px;"></span>
+              </div>
+              <div class="stat-sub" id="stat-total-sup">Calculando superficie...</div>
+            </div>
+          </div>
+
+          <!-- 2. TIERRA FISCAL VIGENTE -->
+          <div class="stat-card" style="border-left: 4px solid #059669;">
+            <div class="stat-card-header">
+              <span class="stat-label">TF Vigente</span>
+              <span class="stat-indicator stat-indicator-vigente" title="Estado: Vigente"></span>
+            </div>
+            <div class="stat-body">
+              <div class="stat-number" id="stat-vigentes-count">
+                <span class="spinner" style="width: 16px; height: 16px;"></span>
+              </div>
+              <div class="stat-sub" id="stat-vigentes-sup">Calculando superficie...</div>
+            </div>
+          </div>
+
+          <!-- 3. TIERRA FISCAL COMPENSADA A TCO -->
+          <div class="stat-card" style="border-left: 4px solid #2563EB;">
+            <div class="stat-card-header">
+              <span class="stat-label">TF Compensada a TCO</span>
+              <span class="stat-indicator stat-indicator-compensada" title="Estado: Compensada TCO"></span>
+            </div>
+            <div class="stat-body">
+              <div class="stat-number" id="stat-compensadas-count">
+                <span class="spinner" style="width: 16px; height: 16px;"></span>
+              </div>
+              <div class="stat-sub" id="stat-compensadas-sup">Calculando superficie...</div>
+            </div>
+          </div>
+
+          <!-- 4. TIERRA FISCAL ANULADA -->
+          <div class="stat-card" style="border-left: 4px solid #E11D48;">
+            <div class="stat-card-header">
+              <span class="stat-label">TF Anulada</span>
+              <span class="stat-indicator stat-indicator-anulada" title="Estado: Anulada"></span>
+            </div>
+            <div class="stat-body">
+              <div class="stat-number" id="stat-anuladas-count">
+                <span class="spinner" style="width: 16px; height: 16px;"></span>
+              </div>
+              <div class="stat-sub" id="stat-anuladas-sup">Calculando superficie...</div>
+            </div>
+          </div>
+
+          <!-- 5. TIERRA FISCAL NO REPORTADA (EN CATASTRO) -->
+          <div class="stat-card" style="border-left: 4px solid #64748B;">
+            <div class="stat-card-header">
+              <span class="stat-label">TF No Reportada (Catastro)</span>
+              <span class="stat-indicator stat-indicator-noreporte" title="Estado: No reportada / Registrada en Catastro"></span>
+            </div>
+            <div class="stat-body">
+              <div class="stat-number" id="stat-noreporte-count">
+                <span class="spinner" style="width: 16px; height: 16px;"></span>
+              </div>
+              <div class="stat-sub" id="stat-noreporte-sup">Calculando superficie...</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- HISTOGRAMA DE TIERRAS FISCALES POR DEPARTAMENTO -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Estadísticos de Tierras Fiscales por Departamento</div>
+              <div class="text-muted" style="font-size: 0.8rem; margin-top: 2px;">
+                Histograma comparativo por departamento — Filtre por categoría mediante los botones interactivos
+              </div>
+            </div>
+            <!-- Alternador de Métrica (Predios vs Superficie) -->
+            <div class="chart-mode-toggle">
+              <button type="button" class="chart-mode-btn active" id="btn-mode-count">Predios (TF)</button>
+              <button type="button" class="chart-mode-btn" id="btn-mode-sup">Superficie (ha)</button>
+            </div>
+          </div>
+          <div class="card-body">
+            <!-- FILTROS TIPO BOTÓN (PILLS) -->
+            <div class="chart-filter-group mb-4">
+              <button type="button" class="chart-pill-btn active" data-category="total">
+                <span class="stat-indicator stat-indicator-total"></span>
+                Total Identificada
+              </button>
+              <button type="button" class="chart-pill-btn pill-vigente" data-category="vigente">
+                <span class="stat-indicator stat-indicator-vigente"></span>
+                TF Vigente
+              </button>
+              <button type="button" class="chart-pill-btn pill-compensada" data-category="compensada">
+                <span class="stat-indicator stat-indicator-compensada"></span>
+                TF Compensada a TCO
+              </button>
+              <button type="button" class="chart-pill-btn pill-anulada" data-category="anulada">
+                <span class="stat-indicator stat-indicator-anulada"></span>
+                TF Anulada
+              </button>
+              <button type="button" class="chart-pill-btn pill-noreporte" data-category="noreporte">
+                <span class="stat-indicator stat-indicator-noreporte"></span>
+                TF No Reportada (Catastro)
+              </button>
+            </div>
+
+            <!-- CONTENEDOR HISTOGRAMA -->
+            <div class="histogram-container" id="dept-histogram">
+              <div class="loading-container"><div class="spinner"></div><span>Cargando histograma departamental...</span></div>
+            </div>
+
+            <!-- RESUMEN / TOTALES DE LA CATEGORÍA ACTIVA -->
+            <div id="histogram-summary-bar" style="margin-top: 16px; padding: 12px 18px; background: #F8FAFC; border-radius: var(--radius-md); border: 1px solid #E2E8F0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <span id="summary-cat-title" style="font-weight: 700; font-size: 0.85rem; color: #064E3B;">TOTAL IDENTIFICADA A NIVEL NACIONAL</span>
+              </div>
+              <div class="d-flex gap-4" style="font-size: 0.82rem;">
+                <div><span class="text-muted">Total Predios: </span><strong id="summary-tot-count" class="tabular-nums">-</strong></div>
+                <div><span class="text-muted">Superficie Total: </span><strong id="summary-tot-sup" class="tabular-nums" style="color: #065F46;">-</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/app-bundle.js?v=20260921_1"></script>
+  <script>
+    (async function() {
+      await INRA.checkAuthGuard('lectura');
+      document.getElementById('btn-logout').addEventListener('click', INRA.logout);
+
+      const dEl = document.getElementById('current-datetime');
+      if (dEl) {
+        dEl.textContent = new Date().toLocaleDateString('es-BO', { 
+          weekday: 'long', 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        });
+      }
+
+      // Cargar estadísticas
+      const stats = await INRA.loadEstadisticasReales();
+      if (!stats) return;
+
+      // 1. Total TF Identificada
+      document.getElementById('stat-total-tf').textContent = Number(stats.total_tf || 0).toLocaleString('es-BO');
+      document.getElementById('stat-total-sup').textContent = INRA.formatHectareas(stats.superficie_total || 0);
+
+      // 2. TF Vigente
+      document.getElementById('stat-vigentes-count').textContent = Number(stats.vigentes_count || 0).toLocaleString('es-BO');
+      document.getElementById('stat-vigentes-sup').textContent = INRA.formatHectareas(stats.vigentes_sup || 0);
+
+      // 3. TF Compensada
+      document.getElementById('stat-compensadas-count').textContent = Number(stats.compensadas_count || 0).toLocaleString('es-BO');
+      document.getElementById('stat-compensadas-sup').textContent = INRA.formatHectareas(stats.compensadas_sup || 0);
+
+      // 4. TF Anulada
+      document.getElementById('stat-anuladas-count').textContent = Number(stats.anuladas_count || 0).toLocaleString('es-BO');
+      document.getElementById('stat-anuladas-sup').textContent = INRA.formatHectareas(stats.anuladas_sup || 0);
+
+      // 5. TF No Reportada (Catastro)
+      document.getElementById('stat-noreporte-count').textContent = Number(stats.no_reportadas_count || 0).toLocaleString('es-BO');
+      document.getElementById('stat-noreporte-sup').textContent = INRA.formatHectareas(stats.no_reportadas_sup || 0);
+
+      // --- LÓGICA DEL HISTOGRAMA INTERACTIVO CON BOTONES FILTRO ---
+      let activeCategory = 'total';
+      let activeMode = 'count';
+
+      const catColors = {
+        total: '#064E3B',
+        vigente: '#059669',
+        compensada: '#2563EB',
+        anulada: '#E11D48',
+        noreporte: '#475569'
+      };
+
+      const catTitles = {
+        total: 'TOTAL IDENTIFICADA A NIVEL NACIONAL',
+        vigente: 'TIERRAS FISCALES VIGENTES',
+        compensada: 'TIERRAS FISCALES COMPENSADAS A TCO',
+        anulada: 'TIERRAS FISCALES ANULADAS',
+        noreporte: 'TIERRAS FISCALES NO REPORTADAS (CATASTRO)'
+      };
+
+      function renderHistogram() {
+        const histCont = document.getElementById('dept-histogram');
+        if (!histCont || !stats.distribucion_departamentos) return;
+
+        const deptos = stats.distribucion_departamentos;
+        const color = catColors[activeCategory] || '#064E3B';
+
+        function getData(d) {
+          if (activeCategory === 'vigente') return { count: d.vigentes, sup: d.vigentes_sup };
+          if (activeCategory === 'compensada') return { count: d.compensadas, sup: d.compensadas_sup };
+          if (activeCategory === 'anulada') return { count: d.anuladas, sup: d.anuladas_sup };
+          if (activeCategory === 'noreporte') return { count: d.no_reportadas, sup: d.no_reportadas_sup };
+          return { count: d.total, sup: d.total_sup };
+        }
+
+        let maxVal = 0;
+        let sumCount = 0;
+        let sumSup = 0;
+
+        deptos.forEach(d => {
+          const item = getData(d);
+          sumCount += item.count;
+          sumSup += item.sup;
+          const val = activeMode === 'count' ? item.count : item.sup;
+          if (val > maxVal) maxVal = val;
+        });
+
+        if (maxVal === 0) maxVal = 1;
+
+        // Actualizar barra de resumen
+        document.getElementById('summary-cat-title').textContent = catTitles[activeCategory];
+        document.getElementById('summary-cat-title').style.color = color;
+        document.getElementById('summary-tot-count').textContent = Number(sumCount).toLocaleString('es-BO') + ' TF';
+        document.getElementById('summary-tot-sup').textContent = INRA.formatHectareas(sumSup);
+
+        // Generar barras de histograma
+        histCont.innerHTML = '';
+        deptos.forEach(d => {
+          const item = getData(d);
+          const currentVal = activeMode === 'count' ? item.count : item.sup;
+          const heightPct = Math.max(3, (currentVal / maxVal) * 100);
+
+          const labelTop = activeMode === 'count' 
+            ? (item.count > 0 ? Number(item.count).toLocaleString('es-BO') : '0')
+            : (item.sup > 0 ? INRA.formatHectareas(item.sup).replace(' ha','') : '0');
+
+          const labelSub = activeMode === 'count' 
+            ? INRA.formatHectareas(item.sup)
+            : Number(item.count).toLocaleString('es-BO') + ' TF';
+
+          const col = document.createElement('div');
+          col.className = 'histogram-col';
+          col.title = `${d.departamento}\nPredios: ${Number(item.count).toLocaleString('es-BO')} TF\nSuperficie: ${INRA.formatHectareas(item.sup)}`;
+
+          col.innerHTML = `
+            <div class="histogram-bar-wrap">
+              <span class="histogram-val-top">${labelTop}</span>
+              <div class="histogram-bar" style="height: ${heightPct.toFixed(1)}%; background-color: ${color};"></div>
+            </div>
+            <div class="histogram-label-bottom">
+              <span class="histogram-dept-name" title="${d.departamento}">${d.departamento}</span>
+              <span class="histogram-sub-val">${labelSub}</span>
+            </div>
+          `;
+          histCont.appendChild(col);
+        });
+      }
+
+      // Eventos Filtros Pill
+      document.querySelectorAll('.chart-pill-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.chart-pill-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          activeCategory = btn.getAttribute('data-category');
+          renderHistogram();
+        });
+      });
+
+      // Eventos Toggle Modo (Predios / Superficie)
+      const btnModeCount = document.getElementById('btn-mode-count');
+      const btnModeSup = document.getElementById('btn-mode-sup');
+      btnModeCount.addEventListener('click', () => {
+        btnModeCount.classList.add('active');
+        btnModeSup.classList.remove('active');
+        activeMode = 'count';
+        renderHistogram();
+      });
+      btnModeSup.addEventListener('click', () => {
+        btnModeSup.classList.add('active');
+        btnModeCount.classList.remove('active');
+        activeMode = 'sup';
+        renderHistogram();
+      });
+
+      // Renderizado Inicial
+      renderHistogram();
+    })();
+  </script>
+</body>
+</html>

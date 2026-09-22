@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalle Técnico de Tierra Fiscal - DGATF</title>
+  <link rel="icon" type="image/svg+xml" href="assets/logo-dgatf.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css?v=20260921_4">
+  <link rel="stylesheet" href="css/layout.css?v=20260921_4">
+  <link rel="stylesheet" href="css/components.css?v=20260921_4">
+  <style>
+    .mode-banner-editing { background-color: #FFFBEB; border: 1px solid #FDE68A; color: #92400E; padding: 12px 18px; border-radius: var(--radius-md); font-weight: 600; font-size: 0.85rem; display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+    .mode-banner-viewing { background-color: #ECFDF5; border: 1px solid #A7F3D0; color: #065F46; padding: 12px 18px; border-radius: var(--radius-md); font-weight: 600; font-size: 0.85rem; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .form-control:disabled, .form-select:disabled, .form-textarea:disabled { background-color: #F8FAFC !important; color: #1E293B !important; border-color: #E2E8F0 !important; cursor: default !important; opacity: 1 !important; font-weight: 500; }
+    
+    /* Barra de Control de Estado Sobria y Compacta */
+    .status-strip {
+      background: #FFFFFF;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 10px 18px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-xs);
+    }
+    .status-strip-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--color-border-subtle);
+    }
+    .status-strip-tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--color-text-muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .status-strip-item label {
+      font-size: 0.70rem;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-bottom: 3px;
+      display: block;
+    }
+    .status-strip-item select {
+      height: 30px !important;
+      font-size: 0.78rem !important;
+      padding: 3px 24px 3px 8px !important;
+      border-radius: 5px !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-wrapper">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="assets/logo.png" onerror="this.onerror=null; this.src='assets/logo-dgatf.svg';" alt="DGATF" class="sidebar-logo-img" width="38" height="38">
+        <div class="sidebar-brand">
+          <div class="sidebar-brand-title">DGATF</div>
+          <div class="sidebar-brand-sub">TIERRAS FISCALES</div>
+        </div>
+      </div>
+      <nav class="sidebar-menu">
+        <div class="sidebar-section-title">Principal</div>
+        <a href="dashboard.html" class="nav-link">
+          <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span>
+          <span>Panel de Control</span>
+        </a>
+        <a href="tierras-fiscales.html" class="nav-link" id="nav-tf-list">
+          <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
+          <span>Tierras Fiscales</span>
+        </a>
+        <a href="tf-detalle.html?nuevo=true" class="nav-link" id="nav-tf-nuevo" data-role-required="editor">
+          <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></span>
+          <span>Nuevo Registro</span>
+        </a>
+        <div class="sidebar-section-title">Archivo DGATF</div>
+        <a href="remisiones.html" class="nav-link">
+          <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>
+          <span>Archivo DGATF</span>
+        </a>
+        <div class="sidebar-section-title" data-role-required="administrador">Sistema</div>
+        <a href="administracion.html" class="nav-link" data-role-required="administrador">
+          <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
+          <span>Administración</span>
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-snippet">
+          <div class="user-avatar" id="layout-user-avatar">U</div>
+          <div class="user-details">
+            <div class="user-name" id="layout-user-name">Usuario</div>
+            <div class="user-role-badge" id="layout-user-role">ACTIVO</div>
+          </div>
+        </div>
+        <button class="btn-logout" id="btn-logout" title="Cerrar Sesión">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+      </div>
+    </aside>
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <div class="topbar-institution"><span id="topbar-context-title">DETALLE TÉCNICO OFICIAL</span></div>
+        </div>
+        <div class="topbar-right">
+          <a href="tierras-fiscales.html" class="btn btn-secondary btn-sm">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            Volver a Tierras Fiscales
+          </a>
+        </div>
+      </header>
+      <main class="page-container">
+        <form id="tf-form" class="protected-form">
+          <div class="page-header">
+            <div class="page-title-group">
+              <h1 id="form-header-title">Detalle Técnico de Tierra Fiscal</h1>
+              <div class="page-subtitle" id="form-header-sub">Visualización técnica de datos oficiales</div>
+            </div>
+            <div class="d-flex gap-2" id="action-buttons-group">
+              <a href="#" id="btn-ver-movimientos-exp" class="btn btn-secondary" style="display: none;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                Ver Expediente
+              </a>
+              <button type="button" id="btn-habilitar-edicion" class="btn btn-warning" data-role-required="editor" style="display: none;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                Editar Datos
+              </button>
+              <button type="button" id="btn-cancelar-edicion" class="btn btn-secondary" style="display: none;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                Cancelar
+              </button>
+              <button type="submit" id="btn-save-tf" class="btn btn-primary" data-role-required="editor">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                Guardar Cambios
+              </button>
+            </div>
+          </div>
+          <div id="banner-view-mode" class="mode-banner-viewing" style="display: none;">
+            <div class="d-flex align-center gap-2">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <span><strong>MODO DE CONSULTA PROTEGIDA:</strong> Datos en solo lectura para salvaguardar la integridad de los registros. Presione "Editar Datos" para modificar.</span>
+            </div>
+          </div>
+          <div id="banner-edit-mode" class="mode-banner-editing" style="display: none;">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <span><strong>MODO DE EDICIÓN ACTIVO:</strong> Campos habilitados. Guarde sus cambios al finalizar o presione Cancelar.</span>
+          </div>
+          <!-- CONTROL DE ESTADO SOBRIO Y COMPACTO -->
+          <div id="panel-control-estado" class="status-strip">
+            <div class="status-strip-header">
+              <span class="status-strip-tag">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Control Registral de Estado
+              </span>
+            </div>
+            <div class="form-grid" style="gap: 12px;">
+              <div class="col-3 form-group status-strip-item" style="margin-bottom: 0;">
+                <label for="reporte_tf">Reporte TF</label>
+                <select id="reporte_tf" name="reporte_tf" class="form-select" data-catalogo="reporte_tf"></select>
+              </div>
+              <div class="col-3 form-group status-strip-item" style="margin-bottom: 0;">
+                <label for="estado">Estado Actual</label>
+                <select id="estado" name="estado" class="form-select" data-catalogo="estado"></select>
+              </div>
+              <div class="col-3 form-group status-strip-item" style="margin-bottom: 0;">
+                <label for="estado_global">Estado Global</label>
+                <select id="estado_global" name="estado_global" class="form-select" data-catalogo="estado_global"></select>
+              </div>
+              <div class="col-3 form-group status-strip-item" style="margin-bottom: 0;">
+                <label for="proceso_contencioso">Proceso Contencioso</label>
+                <select id="proceso_contencioso" name="proceso_contencioso" class="form-select">
+                  <option value="false">NO</option>
+                  <option value="true">SÍ</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="tabs-header">
+            <button type="button" class="tab-btn active" data-target="tab-generales">1. Datos Generales</button>
+            <button type="button" class="tab-btn" data-target="tab-remision">2. Remisión</button>
+            <button type="button" class="tab-btn" data-target="tab-inventario">3. Inventario</button>
+            <button type="button" class="tab-btn" data-target="tab-extras">4. Datos Extras</button>
+            <button type="button" class="tab-btn" data-target="tab-contencioso">5. Contenciosos</button>
+            <button type="button" class="tab-btn" data-target="tab-compensacion">6. Compensación TCO</button>
+          </div>
+          <div class="tab-content">
+            <!-- TAB 1: DATOS GENERALES -->
+            <div class="tab-pane active" id="tab-generales">
+              <div class="form-grid">
+                <div class="col-4 form-group"><label class="form-label required">CODPRED (Único)</label><input type="text" id="codpred" name="codpred" class="form-control" placeholder="Ej: 122052" required></div>
+                <div class="col-4 form-group"><label class="form-label">Nombre Tierra Fiscal</label><input type="text" id="nombre_tf" name="nombre_tf" class="form-control field-calculated" value="TIERRA FISCAL" readonly></div>
+                <div class="col-4 form-group"><label class="form-label">Nombre del Predio</label><input type="text" id="nombre_predio" name="nombre_predio" class="form-control" placeholder="Nombre oficial del predio"></div>
+                <div class="col-4 form-group"><label class="form-label">Resolución TF</label><input type="text" id="resolucion_tf" name="resolucion_tf" class="form-control" placeholder="Ej: RA-CS No0500/2008"></div>
+                <div class="col-4 form-group"><label class="form-label">Fecha Resolución TF</label><input type="date" id="fecha_res_tf" name="fecha_res_tf" class="form-control"></div>
+                <div class="col-4 form-group"><label class="form-label">Tipo de Resolución</label><select id="tipo_de_res" name="tipo_de_res" class="form-select" data-catalogo="tipo_de_res"></select></div>
+                <div class="form-section-divider">Medición de Superficies (Hectáreas)</div>
+                <div class="col-4 form-group"><label class="form-label required">Superficie Predio (ha)</label><input type="number" step="0.0001" id="superficie_predio" name="superficie_predio" class="form-control" placeholder="0.0000" required></div>
+                <div class="col-4 form-group"><label class="form-label">Superficie No Disponible (ha)</label><input type="number" step="0.0001" id="sup_nodisp" name="sup_nodisp" class="form-control" placeholder="0.0000" value="0"></div>
+                <div class="col-4 form-group"><label class="form-label">Superficie Disponible (Calculada)</label><input type="number" step="0.0001" id="sup_disp" name="sup_disp" class="form-control field-calculated" readonly></div>
+                <div class="form-section-divider">Ubicación Geográfica y Clasificación</div>
+                <div class="col-4 form-group"><label class="form-label">Tipo de Tierra Fiscal</label><select id="tipo_tf" name="tipo_tf" class="form-select" data-catalogo="tipo_tf"></select></div>
+                <div class="col-4 form-group"><label class="form-label">Clasificación</label><select id="clasificacion" name="clasificacion" class="form-select" data-catalogo="clasificacion"></select></div>
+                <div class="col-4 form-group"><label class="form-label">Calificación</label><select id="calificacion" name="calificacion" class="form-select" data-catalogo="calificacion"></select></div>
+                <div class="col-4 form-group"><label class="form-label">Departamento</label><select id="departamento" name="departamento" class="form-select"></select></div>
+                <div class="col-4 form-group"><label class="form-label">Provincia</label><select id="provincia" name="provincia" class="form-select"></select></div>
+                <div class="col-4 form-group"><label class="form-label">Municipio</label><select id="municipio" name="municipio" class="form-select"></select></div>
+                <div class="col-6 form-group"><label class="form-label">Modalidad de Saneamiento</label><select id="modalidad" name="modalidad" class="form-select" data-catalogo="modalidad"></select></div>
+                <div class="col-6 form-group"><label class="form-label">N° Folio Real (DDRR)</label><input type="text" id="nro_folio_real" name="nro_folio_real" class="form-control" placeholder="Ej: 7.15.0.10.0000755"></div>
+                <div class="form-section-divider">Rectificatoria o Modificatoria de Resolución (En caso corresponda)</div>
+                <div class="col-4 form-group"><label class="form-label">Cite Res. Rectificatoria / Modificatoria</label><input type="text" id="res_recti_mod" name="res_recti_mod" class="form-control"></div>
+                <div class="col-4 form-group"><label class="form-label">Fecha Res. Rectificatoria</label><input type="date" id="fecha_res_rect_mod" name="fecha_res_rect_mod" class="form-control"></div>
+                <div class="col-4 form-group"><label class="form-label">Detalle de la Rectificatoria</label><input type="text" id="detalle_rectifi" name="detalle_rectifi" class="form-control"></div>
+                <div class="form-section-divider">Observaciones y Notas Generales</div>
+                <div class="col-12 form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Observaciones Globales</label>
+                  <textarea id="observaciones_globales" name="observaciones_globales" class="form-textarea" rows="3" placeholder="Observaciones generales sobre la situación legal, registral o técnica del predio..."></textarea>
+                </div>
+              </div>
+            </div>
+            <!-- TAB 2: REMISION -->
+            <div class="tab-pane" id="tab-remision">
+              <div class="form-grid">
+                <div class="col-6 form-group"><label class="form-label">Nota de Remisión (Cite)</label><input type="text" id="nota_remision_uadm" name="nota_remision_uadm" class="form-control" placeholder="Ej: DGCR-CI 204/2026"></div>
+                <div class="col-6 form-group"><label class="form-label">Fecha Nota Remisión</label><input type="date" id="fecha_rem" name="fecha_rem" class="form-control"></div>
+                <div class="col-6 form-group"><label class="form-label">Hoja de Ruta (HR) Remisión</label><input type="text" id="hr_remision" name="hr_remision" class="form-control" placeholder="Ej: DN HRI NRO 2942/2026"></div>
+                <div class="col-6 form-group"><label class="form-label">Fecha Hoja de Ruta</label><input type="date" id="fecha_hr" name="fecha_hr" class="form-control"></div>
+                <div class="col-4 form-group"><label class="form-label">Gestión Reporte (Auto)</label><input type="number" id="gestion_reporte" name="gestion_reporte" class="form-control field-calculated" readonly></div>
+                <div class="col-12 form-group"><label class="form-label">Observaciones del Reporte</label><textarea id="obs_reporte" name="obs_reporte" class="form-textarea" rows="3"></textarea></div>
+              </div>
+            </div>
+            <!-- TAB 3: INVENTARIO -->
+            <div class="tab-pane" id="tab-inventario">
+              <div class="form-grid">
+                <div class="col-4 form-group"><label class="form-label">Código Antiguo (COD_INV)</label><input type="text" id="cod_inv" name="cod_inv" class="form-control"></div>
+                <div class="col-4 form-group"><label class="form-label">Código Nuevo / Expediente</label><input type="text" id="expediente" name="expediente" class="form-control" placeholder="Ej: EXP-2026-089"></div>
+                <div class="col-4 form-group"><label class="form-label">N° Archivador (Palanca)</label><input type="text" id="numero_archivador" name="numero_archivador" class="form-control"></div>
+                <div class="col-4 form-group"><label class="form-label">N° de Cuerpos</label><input type="number" id="cuerpos" name="cuerpos" class="form-control" value="1" min="1"></div>
+                <div class="col-4 form-group"><label class="form-label">Gavetero</label><input type="text" id="gavetero" name="gavetero" class="form-control"></div>
+                <div class="col-4 form-group"><label class="form-label">Caja del Archivador</label><input type="text" id="caja" name="caja" class="form-control"></div>
+                <div class="col-6 form-group"><label class="form-label">Funcionario Responsable</label><input type="text" id="responsable" name="responsable" class="form-control"></div>
+                <div class="col-6 form-group"><label class="form-label">Director de Administración TF</label><input type="text" id="director" name="director" class="form-control"></div>
+                <div class="col-12 form-group"><label class="form-label">Observaciones de Inventario</label><textarea id="obs_inventario" name="obs_inventario" class="form-textarea" rows="3"></textarea></div>
+              </div>
+            </div>
+            <!-- TAB 4: EXTRAS -->
+            <div class="tab-pane" id="tab-extras">
+              <div class="form-grid">
+                <div class="col-4 form-group"><label class="form-label">Clase de Resolución</label><select id="clase_res" name="clase_res" class="form-select" data-catalogo="clase_res"></select></div>
+                <div class="col-4 form-group"><label class="form-label">Nota Catastro CC</label><input type="text" id="nota_catastro_cc" name="nota_catastro_cc" class="form-control"></div>
+                <div class="col-4 form-group"><label class="form-label">Certificado TAN</label><input type="text" id="certif_tan" name="certif_tan" class="form-control"></div>
+                <div class="col-4 form-group"><label class="form-label">Fecha Revisión de Datos</label><input type="date" id="fecha_revi" name="fecha_revi" class="form-control"></div>
+                <div class="col-4 form-group"><label class="form-label">Registro DDRR</label><input type="text" id="registro_ddrr" name="registro_ddrr" class="form-control"></div>
+                <div class="col-4 form-group"><label class="form-label">Nota Externa Envío DDRR</label><input type="text" id="nota_externa_envio_ddrr" name="nota_externa_envio_ddrr" class="form-control"></div>
+                <div class="col-6 form-group"><label class="form-label">HR Envío a DDRR</label><input type="text" id="hr_ddrr" name="hr_ddrr" class="form-control"></div>
+                <div class="col-6 form-group"><label class="form-label">Nota Remitida Vía Saneamiento Catastro</label><input type="text" id="nota_remitida_via_saneamiento_catastro" name="nota_remitida_via_saneamiento_catastro" class="form-control"></div>
+                <div class="col-12 form-group"><label class="form-label">Observación 1 (Datos Históricos)</label><textarea id="observacion_1" name="observacion_1" class="form-textarea" rows="3"></textarea></div>
+              </div>
+            </div>
+            <!-- TAB 6: CONTENCIOSO -->
+            <div class="tab-pane" id="tab-contencioso">
+              <div class="form-grid">
+                <div class="col-6 form-group"><label class="form-label">N° de Sentencia Agroambiental</label><input type="text" id="nro_sentencia_agroambiental" name="nro_sentencia_agroambiental" class="form-control" placeholder="Ej: SAN-S1-0045/2021"></div>
+                <div class="col-6 form-group"><label class="form-label">Fecha de la Sentencia</label><input type="date" id="fecha_sentencia" name="fecha_sentencia" class="form-control"></div>
+                <div class="col-6 form-group">
+                  <label class="form-label">Estado Proceso Contencioso</label>
+                  <select id="estado_proceso_contencioso" name="estado_proceso_contencioso" class="form-select" data-catalogo="estado_proceso_contencioso"></select>
+                </div>
+                <div class="col-6 form-group">
+                  <label class="form-label">Resolución de la Sentencia</label>
+                  <select id="resolucion_sentencia" name="resolucion_sentencia" class="form-select" data-catalogo="resolucion_sentencia"></select>
+                </div>
+                <div class="col-12 form-group"><label class="form-label">Observación del Proceso (OBS_PROCONT)</label><textarea id="obs_procont" name="obs_procont" class="form-textarea" rows="3"></textarea></div>
+              </div>
+            </div>
+            <!-- TAB 7: COMPENSACION TCO -->
+            <div class="tab-pane" id="tab-compensacion">
+              <div class="form-grid">
+                <div class="col-6 form-group"><label class="form-label">Nombre de la TCO</label><input type="text" id="nombre_tco" name="nombre_tco" class="form-control" placeholder="Ej: TACANA I, YUQUI..."></div>
+                <div class="col-6 form-group"><label class="form-label">Superficie Compensada (ha)</label><input type="number" step="0.0001" id="superficie_compensada" name="superficie_compensada" class="form-control" placeholder="0.0000"></div>
+                <div class="col-6 form-group"><label class="form-label">Estado de la Compensación</label><select id="estado_compensacion" name="estado_compensacion" class="form-select" data-catalogo="estado_compensacion"></select></div>
+                <div class="col-12 form-group"><label class="form-label">Observación de Compensación (OBS_COMPENSACION)</label><textarea id="obs_compensacion" name="obs_compensacion" class="form-textarea" rows="3"></textarea></div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </main>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/app-bundle.js?v=20260921_1"></script>
+  <script>
+    (async function() {
+      const perfil = await INRA.checkAuthGuard("lectura");
+      document.getElementById("btn-logout").addEventListener("click", INRA.logout);
+      document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+          document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
+          btn.classList.add("active");
+          document.getElementById(btn.getAttribute("data-target")).classList.add("active");
+        });
+      });
+      const totInput = document.getElementById("superficie_predio");
+      const nodispInput = document.getElementById("sup_nodisp");
+      const dispInput = document.getElementById("sup_disp");
+      function updateSup() {
+        const t = parseFloat(totInput.value) || 0;
+        const n = parseFloat(nodispInput.value) || 0;
+        dispInput.value = Math.max(0, t - n).toFixed(4);
+      }
+      totInput.addEventListener("input", updateSup);
+      nodispInput.addEventListener("input", updateSup);
+      const fRem = document.getElementById("fecha_rem");
+      const gRep = document.getElementById("gestion_reporte");
+      fRem.addEventListener("change", () => {
+        if (fRem.value) gRep.value = new Date(fRem.value).getFullYear();
+      });
+      await INRA.initAllCatalogSelects();
+      const urlParams = new URLSearchParams(window.location.search);
+      const codpredParam = urlParams.get("codpred");
+      const isNuevoParam = urlParams.get("nuevo") === "true";
+      const form = document.getElementById("tf-form");
+      const allInputs = form.querySelectorAll("input, select, textarea");
+      let originalData = null;
+      function setFormReadOnly(isReadOnly) {
+        allInputs.forEach(el => {
+          if (el.id === "nombre_tf" || el.id === "sup_disp" || el.id === "gestion_reporte") {
+            el.setAttribute("disabled", "true"); return;
+          }
+          if (el.id === "codpred" && codpredParam) {
+            el.setAttribute("disabled", "true"); return;
+          }
+          if (isReadOnly) { el.setAttribute("disabled", "true"); }
+          else { el.removeAttribute("disabled"); }
+        });
+      }
+      if (codpredParam && !isNuevoParam) {
+        document.getElementById("nav-tf-list").classList.add("active");
+        document.getElementById("nav-tf-nuevo").classList.remove("active");
+        document.getElementById("form-header-title").textContent = "Detalle Técnico: CODPRED " + codpredParam;
+        document.getElementById("form-header-sub").textContent = "Registro Oficial de Tierras Fiscales";
+        document.getElementById("topbar-context-title").textContent = "DETALLE TÉCNICO • CODPRED: " + codpredParam;
+        const tf = await INRA.getTierraFiscalByCodpred(codpredParam);
+        if (tf) {
+          originalData = tf;
+          if (tf.nombre_predio) document.getElementById("form-header-title").textContent = "Detalle: " + tf.codpred + " — " + tf.nombre_predio;
+          for (const k of Object.keys(tf)) {
+            const el = document.getElementById(k);
+            if (el && tf[k] !== null && tf[k] !== undefined) {
+              if (el.tagName === 'SELECT' && el.getAttribute('data-catalogo')) {
+                await INRA.populateSelect(el, el.getAttribute('data-catalogo'), tf[k]);
+              } else {
+                el.value = tf[k];
+              }
+            }
+          }
+          await INRA.setupCascadeTerritorios(
+            document.getElementById("departamento"),
+            document.getElementById("provincia"),
+            document.getElementById("municipio"),
+            { departamento: tf.departamento, provincia: tf.provincia, municipio: tf.municipio }
+          );
+          const btnExp = document.getElementById("btn-ver-movimientos-exp");
+          btnExp.href = "remisiones.html?codpred=" + encodeURIComponent(tf.codpred);
+          btnExp.style.display = "inline-flex";
+          setFormReadOnly(true);
+          document.getElementById("banner-view-mode").style.display = "flex";
+          document.getElementById("btn-habilitar-edicion").style.display = "inline-flex";
+          document.getElementById("btn-cancelar-edicion").style.display = "none";
+          document.getElementById("btn-save-tf").style.display = "none";
+        } else {
+          INRA.showToast("No se encontró el predio: " + codpredParam, "danger");
+        }
+      } else {
+        document.getElementById("nav-tf-nuevo").classList.add("active");
+        document.getElementById("nav-tf-list").classList.remove("active");
+        document.getElementById("form-header-title").textContent = "Registrar Nueva Tierra Fiscal";
+        document.getElementById("form-header-sub").textContent = "Complete los datos para ingresar un nuevo predio al registro";
+        document.getElementById("topbar-context-title").textContent = "NUEVO REGISTRO DE TIERRA FISCAL";
+        document.getElementById("btn-habilitar-edicion").style.display = "none";
+        document.getElementById("btn-cancelar-edicion").style.display = "none";
+        document.getElementById("btn-save-tf").innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Guardar Nueva Tierra Fiscal`;
+        document.getElementById("btn-save-tf").style.display = "inline-flex";
+        setFormReadOnly(false);
+        await INRA.setupCascadeTerritorios(
+          document.getElementById("departamento"),
+          document.getElementById("provincia"),
+          document.getElementById("municipio")
+        );
+      }
+      function activarEdicion() {
+        setFormReadOnly(false);
+        document.getElementById("banner-view-mode").style.display = "none";
+        document.getElementById("banner-edit-mode").style.display = "flex";
+        document.getElementById("btn-habilitar-edicion").style.display = "none";
+        document.getElementById("btn-cancelar-edicion").style.display = "inline-flex";
+        document.getElementById("btn-save-tf").style.display = "inline-flex";
+        document.getElementById("btn-save-tf").innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Guardar Cambios`;
+        INRA.showToast("Campos habilitados para edición. Modifique con cuidado.", "warning");
+      }
+      const btnHab = document.getElementById("btn-habilitar-edicion");
+      if (btnHab) btnHab.addEventListener("click", activarEdicion);
+
+      document.getElementById("btn-cancelar-edicion").addEventListener("click", () => {
+        if (originalData) {
+          Object.keys(originalData).forEach(k => {
+            const el = document.getElementById(k);
+            if (el && originalData[k] !== null && originalData[k] !== undefined) el.value = originalData[k];
+          });
+        }
+        setFormReadOnly(true);
+        document.getElementById("banner-view-mode").style.display = "flex";
+        document.getElementById("banner-edit-mode").style.display = "none";
+        document.getElementById("btn-habilitar-edicion").style.display = "inline-flex";
+        document.getElementById("btn-cancelar-edicion").style.display = "none";
+        document.getElementById("btn-save-tf").style.display = "none";
+        INRA.showToast("Edición cancelada. Datos restaurados.", "info");
+      });
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        allInputs.forEach(el => el.removeAttribute("disabled"));
+        const formData = new FormData(form);
+        const record = Object.fromEntries(formData.entries());
+        const isEditingExisting = !!codpredParam;
+        const btn = document.getElementById("btn-save-tf");
+        try {
+          btn.disabled = true; btn.textContent = "Guardando...";
+          await INRA.saveTierraFiscal(record, isEditingExisting);
+          setTimeout(() => { window.location.href = "tf-detalle.html?codpred=" + encodeURIComponent(record.codpred); }, 600);
+        } catch (err) {
+          btn.disabled = false; btn.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Guardar Cambios`;
+          INRA.showToast("Error al guardar: " + err.message, "danger");
+          if (isEditingExisting) setFormReadOnly(false);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
